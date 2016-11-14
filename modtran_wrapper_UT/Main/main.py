@@ -26,16 +26,15 @@ Andere files readen und plotten
 import subprocess, os
 import numpy as np
 from Main.modtran_functions import ModtranFunctions
-from Main.variable_libraries.variable_library_20150226_1 import StandardParameters
+from Main.variable_libraries.variable_library_20161114 import StandardParameters
 
 
 
 class BuildTape5(object):
     def __init__(self):
         self.stan_parm = StandardParameters()
-        self.tp5_directory = r'C:\Program Files SR\Spectral Sciences, Inc\MODTRAN(R)\5.2.1\TEST'
-        self.filename = '20160226_4'
-        ''' This is the filename of the future tap5'''
+        self.tp5_directory = self.stan_parm.output_directory
+        self.filename = self.stan_parm.tp5_filename # This is the filename of the future tape5
         
         self.modtran_functions = ModtranFunctions()
     
@@ -226,10 +225,10 @@ class BuildTape5(object):
                     self.write_tape5(mat = parameter_mat)
                     
                     
-        filename_2 = r'C:\Program Files SR\Spectral Sciences, Inc\MODTRAN(R)\5.2.1\mod5root.in'
+        filename_2 = r'C:\Program Files SR\Spectral Sciences, Inc\MODTRAN(R)\5.2.1\mod5root.in' # the mod5root.in file tells MODTRAN which tape5 should be processed
         input_line = 'TEST/' + self.filename
         
-        self.modtran_functions.line_prepender(filename_2, '\n')
+        self.modtran_functions.line_prepender(filename_2, '\n') # the name of the current tape5 is added to the mod5root.in file
         self.modtran_functions.line_prepender(filename_2, input_line)
                     
         os.chdir(r'C:\Program Files SR\Spectral Sciences, Inc\MODTRAN(R)\5.2.1')

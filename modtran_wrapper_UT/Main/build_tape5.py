@@ -6,7 +6,7 @@ Created on Nov 25, 2015
 
 import subprocess, os
 from Main.modtran_functions import ModtranFunctions
-from Main.variable_library import StandardParameters
+from Main.variable_libraries.variable_library import StandardParameters
 
 
 

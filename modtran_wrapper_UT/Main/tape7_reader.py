@@ -5,13 +5,14 @@ Created on 17.11.2015
 '''
 
 import os
+import numpy as np
 from Main.modtran_functions import ModtranFunctions
 
 class Tape7_reader(object):
     def __init__(self):
         pass
 
-    def read_tape7(self, tape7_directory, filename):
+    def read_tape7(self, tape7_directory, filename, write_to_separate_files):
         '''Input:
         - tape7_directory: the path directory where the .tp7 is located
         - filename: filename of the .tp7 file
@@ -32,15 +33,15 @@ class Tape7_reader(object):
         
         #results_directory = r'C:\Users\ried_st\OneDrive\Austausch\Programming\TEST'
         #results_filename = 'ASCIIwrite.tp7'
-        filename = filename + '.tp7'
-        tape7_directory = os.path.join(tape7_directory, filename)
+        filename_ext = filename + '.tp7'
+        tape7_path = os.path.join(tape7_directory, filename_ext)
         
         beginning_data = []
         end_data = []
                 
         '''searches for keywords in tape 7 and determines the lines in which data begins and stops'''
         
-        with open(tape7_directory, 'r') as tape7:
+        with open(tape7_path, 'r') as tape7:
             searchlines = tape7.readlines()
         for i, line in enumerate(searchlines):
             if 'FREQ' in line:
@@ -71,7 +72,7 @@ class Tape7_reader(object):
         complete_data = []
                 
         for i in range(0, len(beginning_data)):
-            '''if tape5 contains multiple input blocks, there are also multiple output blocks. len(beginning_data) is the number of output blocks'''
+            '''if tape7 contains multiple input blocks, there are also multiple output blocks. len(beginning_data) is the number of output blocks'''
             block = []
             for j in range(0, len(list_parameters)):
                 '''each parameter row needs to be extracted separately'''
@@ -95,6 +96,21 @@ class Tape7_reader(object):
         #print (beginning_data)
         #print (end_data)
         #print (list_parameters)
+        if write_to_separate_files == 'y':
+            with open(tape7_path, 'r') as tape7:
+                searchlines = tape7.readlines()
+            for i in range(0, len(beginning_data)):
+                data_write = searchlines[beginning_data[i-1]-1:end_data[i-1]+1]
+
+                new_file = open(tape7_directory + '\\' + filename + '_' + str(i) + '.dat', 'w')
+                new_file.writelines(data_write)
+                new_file.close()
+                
+            
+            
+#             new_tape5 = open(input_directory + '/' + filename + '.dat', 'w')
+#             new_tape5.writelines(output_file)
+#             new_tape5.close()
         return([beginning_data, end_data, list_parameters2, complete_data])
     
     
